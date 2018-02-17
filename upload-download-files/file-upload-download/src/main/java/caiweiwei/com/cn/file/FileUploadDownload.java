@@ -7,7 +7,7 @@ import javax.ws.rs.PathParam;
 
 @Path("/files")
 public class FileUploadDownload {
-	private static final String basePath = "/home/chao/pictures";
+	private static final String basePath = "/home/chao/pictures/";
 	
 	@GET
 	@Path("/{filepath:.*}")
