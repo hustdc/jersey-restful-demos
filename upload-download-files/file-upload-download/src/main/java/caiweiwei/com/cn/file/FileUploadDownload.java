@@ -10,7 +10,7 @@ public class FileUploadDownload {
 	private static final String basePath = "/home/chao/pictures";
 	
 	@GET
-	@Path("{filepath:.*}")
+	@Path("/{filepath:.*}")
 	@Produces("text/plain")
 	public File getFile(@PathParam("filepath") String path)
 	{
