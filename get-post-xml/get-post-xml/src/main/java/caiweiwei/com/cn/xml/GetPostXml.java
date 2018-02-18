@@ -3,11 +3,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+import javax.ws.rs.POST;
+import javax.ws.rs.Consumes;
 
 @Path("/xmls")
 public class GetPostXml {
 	
-	@Path("/planet")
+	@Path("/get_planet")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
     public Planet getPlanet() {
@@ -18,4 +20,11 @@ public class GetPostXml {
     	
     	return planet;
     }
+	
+	@Path("/post_planet")
+	@POST
+	@Consumes(MediaType.APPLICATION_XML)
+	public void postPlanet(Planet planet) {
+		System.out.println(planet);
+	}
 }
