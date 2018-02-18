@@ -9,9 +9,9 @@ int main(void)
 {
 	CURL *curl;
         CURLcode res;
-	char *post = "{\"name]":\"Agamemnon\",\"age\":32}";
+	char *post = "{\"name\":\"Agamemnon\",\"age\":32}";
 
-	char *url = "http://192.168.43.2:8888/rest2/rest2/xmls/post_planet";
+	char *url = "http://192.168.43.2:8888/rest3/rest3/json/post_json";
 	curl = curl_easy_init();
 	  
 	if(curl)
