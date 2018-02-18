@@ -1,18 +1,9 @@
 #include <curl/curl.h>  
-#include <string>  
-#include <exception>  
       
     int main(int argc, char *argv[])   
     {  
-        char szJsonData[1024];  
-        memset(szJsonData, 0, sizeof(szJsonData));  
-        std::string strJson = "{";  
-        strJson += "\"user_name\" : \"test\",";  
-        strJson += "\"password\" : \"test123\"";  
-        strJson += "}";  
-        strcpy(szJsonData, strJson.c_str());  
-        try   
-        {  
+        char *szJsonData = "{\"name\":\"Agamemnon\",\"age\":32}"
+    
             CURL *pCurl = NULL;  
             CURLcode res;  
             // In windows, this will init the winsock stuff  
@@ -50,10 +41,6 @@
                 curl_easy_cleanup(pCurl);  
             }  
             curl_global_cleanup();  
-        }  
-        catch (std::exception &ex)  
-        {  
-            printf("curl exception %s.\n", ex.what());  
-        }  
+        }   
         return 0;  
     }  
