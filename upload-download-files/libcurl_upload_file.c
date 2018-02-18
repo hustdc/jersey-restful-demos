@@ -1,96 +1,72 @@
-/***************************************************************************
- *                                  _   _ ____  _
- *  Project                     ___| | | |  _ \| |
- *                             / __| | | | |_) | |
- *                            | (__| |_| |  _ <| |___
- *                             \___|\___/|_| \_\_____|
- *
- * Copyright (C) 1998 - 2016, Daniel Stenberg, <daniel@haxx.se>, et al.
- *
- * This software is licensed as described in the file COPYING, which
- * you should have received as part of this distribution. The terms
- * are also available at https://curl.haxx.se/docs/copyright.html.
- *
- * You may opt to use, copy, modify, merge, publish, distribute and/or sell
- * copies of the Software, and permit persons to whom the Software is
- * furnished to do so, under the terms of the COPYING file.
- *
- * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
- * KIND, either express or implied.
- *
- ***************************************************************************/
-/* <DESC>
- * Upload to a file:// URL
- * </DESC>
- */
-#include <stdio.h>
+#include <stdio.h>  
+
+#include <string.h>    
+
 #include <curl/curl.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
-int main(void)
-{
-  CURL *curl;
-  CURLcode res;
-  struct stat file_info;
-  double speed_upload, total_time;
-  FILE *fd;
+  
+int main(int argc, char *argv[])  
+{  
+  CURL *curl;  
+  CURLcode res;  
+  
+  struct curl_httppost *formpost=NULL;  
+  struct curl_httppost *lastptr=NULL;  
+  struct curl_slist *headerlist=NULL;  
+  static const char buf[] = "Expect:";  
+  
+  curl_global_init(CURL_GLOBAL_ALL);  
+  
+  /* Fill in the file upload field */  
+  curl_formadd(&formpost,  
+               &lastptr,  
+               CURLFORM_COPYNAME, "sendfile",  
+               CURLFORM_FILE, "./hello3.txt",  
+               CURLFORM_END);  
+  
+  /* Fill in the filename field */  
+  curl_formadd(&formpost,  
+               &lastptr,  
+               CURLFORM_COPYNAME, "filename",  
+               CURLFORM_COPYCONTENTS, "sign.txt",  
+               CURLFORM_END);  
+  
+  /* Fill in the submit field too, even if this is rarely needed */  
+  curl_formadd(&formpost,  
+               &lastptr,  
+               CURLFORM_COPYNAME, "submit",  
+               CURLFORM_COPYCONTENTS, "Submit",  
+               CURLFORM_END);  
+  
+  curl = curl_easy_init();  
+  /* initalize custom header list (stating that Expect: 100-continue is not 
+     wanted */  
+  headerlist = curl_slist_append(headerlist, buf);  
+  if(curl) {  
+    /* what URL that receives this POST */  
 
-  fd = fopen("./hello3.txt", "rb"); /* open file to upload */
-  if(!fd)
-    return 1; /* can't continue */
-
-  /* to get the file size */
-  if(fstat(fileno(fd), &file_info) != 0)
-    return 1; /* can't continue */
-
-  curl = curl_easy_init();
-  if(curl) {
-
-      struct curl_slist *slist = NULL;
-    
-      slist = curl_slist_append(slist, "Accept: */*");
-      // slist = curl_slist_append(slist, "Content-Type: application/x-www-form-urlencoded");
-      slist = curl_slist_append(slist, "Content-Type: multipart/form-data");
-    
-    
-      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-    /* upload to this place */
-    curl_easy_setopt(curl, CURLOPT_URL,
-                     "http://192.168.43.2:8888/rest/rest/files/upload");
-
-    /* tell it to "upload" to the URL */
-    curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
-
-    /* set where to read from (on Windows you need to use READFUNCTION too) */
-    curl_easy_setopt(curl, CURLOPT_READDATA, fd);
-
-    /* and give the size of the upload (optional) */
-    curl_easy_setopt(curl, CURLOPT_INFILESIZE_LARGE,
-                     (curl_off_t)file_info.st_size);
-
-    /* enable verbose for easier tracing */
-    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-    res = curl_easy_perform(curl);
-    /* Check for errors */
-    if(res != CURLE_OK) {
-      fprintf(stderr, "curl_easy_perform() failed: %s\n",
-              curl_easy_strerror(res));
-
-    }
-    else {
-      /* now extract transfer info */
-      curl_easy_getinfo(curl, CURLINFO_SPEED_UPLOAD, &speed_upload);
-      curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &total_time);
-
-      fprintf(stderr, "Speed: %.3f bytes/sec during %.3f seconds\n",
-              speed_upload, total_time);
-
-    }
-    /* always cleanup */
-    curl_easy_cleanup(curl);
-  }
-  fclose(fd);
-  return 0;
-}
+     curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.43.2:8888/rest/rest/files/upload");  
+    if ( (argc == 2) && (!strcmp(argv[1], "noexpectheader")) )  
+      /* only disable 100-continue header if explicitly requested */  
+      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);  
+    curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);  
+  
+    /* Perform the request, res will get the return code */  
+    res = curl_easy_perform(curl);  
+    /* Check for errors */  
+    if(res != CURLE_OK)  
+      fprintf(stderr, "curl_easy_perform() failed: %s\n",  
+              curl_easy_strerror(res));  
+  
+    /* always cleanup */  
+    curl_easy_cleanup(curl);  
+  
+    /* then cleanup the formpost chain */  
+    curl_formfree(formpost);  
+    /* free slist */  
+    curl_slist_free_all (headerlist);  
+  }  
+  return 0;  
+}  
+  
+ 
