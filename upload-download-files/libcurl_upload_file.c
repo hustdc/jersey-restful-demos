@@ -57,15 +57,15 @@ int main(int argc, char *argv[])
   /* Fill in the file upload field */
   curl_formadd(&formpost,
                &lastptr,
-               CURLFORM_COPYNAME, "sendfile",
-               CURLFORM_FILE, "postit2.c",
+               CURLFORM_COPYNAME, "file",
+               CURLFORM_FILE, "./hello3.txt",
                CURLFORM_END);
 
   /* Fill in the filename field */
   curl_formadd(&formpost,
                &lastptr,
                CURLFORM_COPYNAME, "filename",
-               CURLFORM_COPYCONTENTS, "postit2.c",
+               CURLFORM_COPYCONTENTS, "hello3.txt",
                CURLFORM_END);
 
 
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
   headerlist = curl_slist_append(headerlist, buf);
   if(curl) {
     /* what URL that receives this POST */
-    curl_easy_setopt(curl, CURLOPT_URL, "http://example.com/examplepost.cgi");
+    curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.43.2:8888/rest/rest/files/upload");
     if((argc == 2) && (!strcmp(argv[1], "noexpectheader")))
       /* only disable 100-continue header if explicitly requested */
       curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
