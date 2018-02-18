@@ -71,7 +71,6 @@ int main(void)
 
     /* enable verbose for easier tracing */
     curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post);
 
     res = curl_easy_perform(curl);
     /* Check for errors */
