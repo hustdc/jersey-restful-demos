@@ -46,6 +46,15 @@ int main(void)
 
   curl = curl_easy_init();
   if(curl) {
+
+      struct curl_slist *slist = NULL;
+    
+      slist = curl_slist_append(slist, "Accept: */*");
+      // slist = curl_slist_append(slist, "Content-Type: application/x-www-form-urlencoded");
+      slist = curl_slist_append(slist, "Content-Type: multipart/form-data");
+    
+    
+      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
     /* upload to this place */
     curl_easy_setopt(curl, CURLOPT_URL,
                      "http://192.168.43.2:8888/rest/rest/files/upload");
