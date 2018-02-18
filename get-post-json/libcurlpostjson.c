@@ -9,7 +9,7 @@ int main(void)
 {
 	CURL *curl;
         CURLcode res;
-	char *post = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><planet><id>1</id><name>Earth</name><radius>1.0</radius></planet>";
+	char *post = "{\"name]":\"Agamemnon\",\"age\":32}";
 
 	char *url = "http://192.168.43.2:8888/rest2/rest2/xmls/post_planet";
 	curl = curl_easy_init();
@@ -20,7 +20,7 @@ int main(void)
 	  
 	    slist = curl_slist_append(slist, "Accept: */*");
 	    // slist = curl_slist_append(slist, "Content-Type: application/x-www-form-urlencoded");
-	    slist = curl_slist_append(slist, "Content-Type: application/xml");
+	    slist = curl_slist_append(slist, "Content-Type: application/json");
 		
 		
 	    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
