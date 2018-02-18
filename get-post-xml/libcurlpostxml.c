@@ -9,9 +9,9 @@ int main(void)
 {
 	CURL *curl;
         CURLcode res;
-	char *post = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><transaction><transaction_header  lose some secury  </transaction>";
+	char *post = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><planet><id>1</id><name>Earth</name><radius>1.0</radius></planet>";
 
-	char *url = "http://epos.yilian.com/ScoutAction!scoutAction.action";
+	char *url = "http://192.168.43.2:8888/rest2/rest2/xmls/post_planet";
 	curl = curl_easy_init();
 	  
 	if(curl)
@@ -20,7 +20,7 @@ int main(void)
 	  
 	    slist = curl_slist_append(slist, "Accept: */*");
 	    // slist = curl_slist_append(slist, "Content-Type: application/x-www-form-urlencoded");
-	    slist = curl_slist_append(slist, "Content-Type: text/xml");
+	    slist = curl_slist_append(slist, "Content-Type: application/xml");
 		
 		
 	    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
