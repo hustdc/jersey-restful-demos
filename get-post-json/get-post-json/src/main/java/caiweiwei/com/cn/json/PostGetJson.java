@@ -23,5 +23,4 @@ public class PostGetJson {
 	public void postMyBean(MyJaxbBean myJaxBean) {
 		System.out.println(myJaxBean.getName());
 	}
-	
 }
