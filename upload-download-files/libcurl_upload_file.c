@@ -36,7 +36,7 @@ int main(void)
   double speed_upload, total_time;
   FILE *fd;
 
-  fd = fopen("./hello.txt", "rb"); /* open file to upload */
+  fd = fopen("./hello3.txt", "rb"); /* open file to upload */
   if(!fd)
     return 1; /* can't continue */
 
