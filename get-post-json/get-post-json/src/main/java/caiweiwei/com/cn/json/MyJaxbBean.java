@@ -1,6 +1,7 @@
 package caiweiwei.com.cn.json;
+import javax.xml.bind.annotation.XmlRootElement;
 
-
+@XmlRootElement
 public class MyJaxbBean {
 	 public String name;
 	 public int age;
