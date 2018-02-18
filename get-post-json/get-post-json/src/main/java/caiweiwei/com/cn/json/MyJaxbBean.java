@@ -6,6 +6,8 @@ public class MyJaxbBean {
 	 public String name;
 	 public int age;
 	 
+	 public MyJaxbBean() {}
+	 
 	 public MyJaxbBean(String name, int age) {
 	     this.name = name;
 	     this.age = age;
